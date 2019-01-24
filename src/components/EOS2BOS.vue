@@ -9,7 +9,7 @@
         </nav>
         <div class="row">
             <div class="col">
-                <span class="text-center">EOS<i class="el-icon-d-arrow-right"></i>EOS锚定币 <button type="button" class="btn btn-success btn-sm" @click="scatterLogin"><i class="el-icon-sort"></i>切换</button></span>
+                <span class="text-center">EOS<i class="el-icon-d-arrow-right"></i>EOS锚定币 <router-link to="/bos2eos"><button type="button" class="btn btn-success btn-sm" @click="scatterLogin"><i class="el-icon-sort"></i>切换</button></router-link></span>
             </div>
         </div>
         <div class="row  mt-3" v-if="!isEosLogin">
@@ -180,7 +180,13 @@
             scatterLogin() {
                 var _this = this;
                 ScatterJS.scatter.connect('kyubey-eos').then(connected => {
-                    if (!connected) return false;
+                    if (!connected) {
+                        this.$message({
+                            message: '请安装Scatter钱包',
+                            type: 'error'
+                        });
+                        return;
+                    };
 
                     _this.eosScatter = ScatterJS.scatter;
 
@@ -189,8 +195,16 @@
                         _this.eosAccount = _this.eosScatter.identity.accounts.find(x => x.blockchain === 'eos');
 
                     }).catch(error => {
+                        if (error.code == 402) {
+                            _this.$message({
+                                message: '该钱包没有导入EOS账号',
+                                type: 'error'
+                            });
+                        }
                         console.error(error);
                     });
+                }).catch((err) => {
+                    console.log(err);
                 });
             },
             logoutEOSScatter() {

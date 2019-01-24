@@ -17,7 +17,8 @@
     "scatterjs-plugin-eosjs": "^1.5.0",
     "scatterjs-plugin-eosjs2": "^1.5.0",
     "vue": "^2.5.21",
-    "vue-i18n": "^8.7.0"
+    "vue-i18n": "^8.7.0",
+    "vue-router": "^3.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.3.0",
