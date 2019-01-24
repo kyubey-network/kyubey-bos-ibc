@@ -9,7 +9,7 @@
         </nav>
         <div class="row">
             <div class="col">
-                <span class="text-center">EOS锚定币<i class="el-icon-d-arrow-right"></i>EOS <router-link to="/"><button type="button" class="btn btn-success btn-sm" @click="scatterLogin"> <i class="el-icon-sort"></i>切换</button></router-link> </span>
+                <span class="text-center">EOS锚定币<i class="el-icon-d-arrow-right"></i>EOS <router-link to="/" v-if="!isMobile"><button type="button" class="btn btn-success btn-sm" @click="scatterLogin"> <i class="el-icon-sort"></i>切换</button></router-link> </span>
             </div>
         </div>
         <div class="row  mt-3" v-if="!isEosLogin">
@@ -379,6 +379,9 @@
             }
         },
         computed: {
+            isMobile: function () {
+                return window.innerWidth < 768;
+            },
             eosRequiredFields: function () {
                 var _this = this;
                 return { accounts: [this.eosNetwork] };
