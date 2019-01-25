@@ -1,12 +1,5 @@
 <template>
-    <div class="page-content  navbar-light bg-light">
-        <nav class="navbar ">
-            <a class="navbar-brand" href="#">
-                <img src="/imgs/logo.png" width="30" height="30" class="d-inline-block align-top">
-                Kyubey BOS IBC
-            </a>
-
-        </nav>
+    <div>
         <div class="row">
             <div class="col">
                 <span class="text-center">
@@ -115,12 +108,6 @@
                 </ul>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col">
-                <span class="text-center top-text-tip">根据<a href="https://github.com/boscore/Documentation/blob/master/IBC/README_CN.md" target="_blank">官方IBC协议</a>,网站不收取任何手续费</span>
-            </div>
-        </div>
     </div>
 </template>
 <script>
@@ -226,7 +213,7 @@
                 if (balance.length > 0) {
                     return balance[0].getEOSBalanceObj();
                 }
-                return 0;               
+                return 0;
             },
             getBOSBalance: async function (account, symbol) {
                 var balance = await this.bos().getCurrencyBalance('bosibc.io', account, symbol);
