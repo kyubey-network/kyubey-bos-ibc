@@ -9,7 +9,10 @@
         </nav>
         <div class="row">
             <div class="col">
-                <span class="text-center">EOS锚定币<i class="el-icon-d-arrow-right"></i>EOS <router-link to="/" v-if="!isMobile"><button type="button" class="btn btn-success btn-sm" @click="scatterLogin"> <i class="el-icon-sort"></i>切换</button></router-link> </span>
+                <span class="text-center">
+                    EOS锚定币<i class="el-icon-d-arrow-right"></i>EOS
+                    <button type="button" @click="switchExchange" v-if="!isMobile" class="btn btn-success btn-sm"> <i class="el-icon-sort"></i>切换</button>
+                </span>
             </div>
         </div>
         <div class="row  mt-3" v-if="!isEosLogin">
@@ -20,7 +23,7 @@
                             <div class="d-flex col-sm-12 align-content-center flex-wrap  padding0">
                                 <div class=" text-left login-type  flex-center">BOS:</div>
                                 <div class="col text-right padding0">
-                                    <button type="button" class="btn btn-success" @click="scatterLogin">请登录</button>
+                                    <button type="button" class="btn btn-success" @click="scatterLogin">登录</button>
                                 </div>
                             </div>
                         </div>
@@ -178,6 +181,10 @@
             }
         },
         methods: {
+            switchExchange() {
+                this.logoutEOSScatter();
+                this.$router.push("/");
+            },
             scatterLogin() {
                 var _this = this;
                 ScatterJS.scatter.connect('kyubey-bos').then(connected => {
@@ -205,7 +212,6 @@
                         console.error(error);
                     });
                 }).catch((err) => {
-
                     console.log(err);
                 });
             },
@@ -217,7 +223,10 @@
             },
             getEOSBalance: async function (account, symbol) {
                 var balance = await this.eos().getCurrencyBalance('bosibc.io', account, symbol);
-                return balance[0].getEOSBalanceObj();
+                if (balance.length > 0) {
+                    return balance[0].getEOSBalanceObj().value;
+                }
+                return 0;
             },
             getBOSBalance: async function (account, symbol) {
                 var balance = await this.bos().getCurrencyBalance('eosio.token', account, symbol);
@@ -230,7 +239,8 @@
                     var cpu_all = result.cpu_limit.max;
                     var cpu_used = result.cpu_limit.used;
                     //var balance = result.core_liquid_balance.getEOSBalanceObj().value;
-                    var balance = (await _this.getEOSBalance(_this.eosAccount.name, "EOS")).value;
+                    var balance = (await _this.getEOSBalance(_this.eosAccount.name, "EOS"));
+
                     var cpu_percent = (cpu_used * 100 / cpu_all).toFixed(2);
                     var name = result.account_name;
 
@@ -328,7 +338,6 @@
                         });
                     })
                     .catch(error => {
-                        debugger;
                         this.$message({
                             message: '交易失败',
                             type: 'error'

@@ -2,14 +2,17 @@
     <div class="page-content  navbar-light bg-light">
         <nav class="navbar ">
             <a class="navbar-brand" href="#">
-                <img src="/imgs/logo.png" width="30" height="30" class="d-inline-block align-top" alt>
+                <img src="/imgs/logo.png" width="30" height="30" class="d-inline-block align-top">
                 Kyubey BOS IBC
             </a>
 
         </nav>
         <div class="row">
             <div class="col">
-                <span class="text-center">EOS<i class="el-icon-d-arrow-right"></i>EOS锚定币 <router-link to="/bos2eos" v-if="!isMobile"><button type="button" class="btn btn-success btn-sm" @click="scatterLogin"><i class="el-icon-sort"></i>切换</button></router-link></span>
+                <span class="text-center">
+                    EOS<i class="el-icon-d-arrow-right"></i>EOS锚定币
+                    <button type="button" @click="switchExchange" v-if="!isMobile" class="btn btn-success btn-sm"><i class="el-icon-sort"></i>切换</button>
+                </span>
             </div>
         </div>
         <div class="row  mt-3" v-if="!isEosLogin">
@@ -20,7 +23,7 @@
                             <div class="d-flex col-sm-12 align-content-center flex-wrap  padding0">
                                 <div class=" text-left login-type  flex-center">EOS:</div>
                                 <div class="col text-right padding0">
-                                    <button type="button" class="btn btn-success" @click="scatterLogin">请登录</button>
+                                    <button type="button" class="btn btn-success" @click="scatterLogin">登录</button>
                                 </div>
                             </div>
                         </div>
@@ -177,6 +180,10 @@
             }
         },
         methods: {
+            switchExchange() {
+                this.logoutEOSScatter();
+                this.$router.push("/bos2eos");
+            },
             scatterLogin() {
                 var _this = this;
                 ScatterJS.scatter.connect('kyubey-eos').then(connected => {
@@ -215,7 +222,11 @@
             },
             getEOSBalance: async function (account, symbol) {
                 var balance = await this.eos().getCurrencyBalance('eosio.token', account, symbol);
-                return balance[0].getEOSBalanceObj();
+
+                if (balance.length > 0) {
+                    return balance[0].getEOSBalanceObj();
+                }
+                return 0;               
             },
             getBOSBalance: async function (account, symbol) {
                 var balance = await this.bos().getCurrencyBalance('bosibc.io', account, symbol);
@@ -227,7 +238,7 @@
                 this.eos().getAccount(_this.eosAccount.name).then((result) => {
                     var cpu_all = result.cpu_limit.max;
                     var cpu_used = result.cpu_limit.used;
-                    var balance = result.core_liquid_balance.getEOSBalanceObj().value;
+                    var balance = result.core_liquid_balance.getEOSBalanceObj();
                     var cpu_percent = (cpu_used * 100 / cpu_all).toFixed(2);
                     var name = result.account_name;
 
