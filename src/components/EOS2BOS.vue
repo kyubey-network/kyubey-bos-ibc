@@ -274,10 +274,10 @@
                         }
                     }
                     else {
-                        this.$message({
-                            message: '未知错误',
-                            type: 'warning'
-                        });
+                        _this.bosInfo = {
+                            name: _this.searchBox,
+                            balance: 0
+                        }
                     }
                 }).catch((err) => {
                     this.$message({
