@@ -238,7 +238,7 @@
                 this.eos().getAccount(_this.eosAccount.name).then((result) => {
                     var cpu_all = result.cpu_limit.max;
                     var cpu_used = result.cpu_limit.used;
-                    var balance = result.core_liquid_balance.getEOSBalanceObj();
+                    var balance = result.core_liquid_balance.getEOSBalanceObj().value;
                     var cpu_percent = (cpu_used * 100 / cpu_all).toFixed(2);
                     var name = result.account_name;
 
