@@ -374,12 +374,19 @@
                 _this.eosScatter = ScatterJS.scatter;
                 _this.eos = () => _this.eosScatter.eos(_this.eosNetwork, Eos, {});
 
-                ScatterJS.scatter.checkLogin().then(identity => {
-                    _this.eosAccount = identity.accounts.find(x => x.blockchain === 'eos');
+                _this.eosScatter.getIdentity(_this.eosRequiredFields).then(() => {
+
+                    _this.eosAccount = _this.eosScatter.identity.accounts.find(x => x.blockchain === 'eos');
 
                 }).catch(error => {
-                    //...
-                })
+                    if (error.code == 402) {
+                        _this.$message({
+                            message: '该钱包没有导入EOS账号',
+                            type: 'error'
+                        });
+                    }
+                    console.error(error);
+                });
             });
 
             _this.bosScatter = ScatterJS.scatter;
